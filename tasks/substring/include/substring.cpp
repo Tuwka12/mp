@@ -17,7 +17,7 @@ std::vector<int> RK_search(const char* T, const char* F) {
 	std::vector<int> result;
 	int q = 617, d = 256;
 	int n = (int)(strlen(T)), m = (int)(strlen(F));
-	int h = (int)(pow(d, m - 1)) % q, f = 0, t = 0;
+	int h = (long long)(pow(d, m - 1)) % q, f = 0, t = 0;
 
 	for (int i = 0; i < m; ++i) {
 		f = (d * f + F[i]) % q;
