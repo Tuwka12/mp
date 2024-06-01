@@ -33,10 +33,16 @@ int BFS_recursive(std::list<int>* L, std::list<Edge>* E, int n);
 // * Алгоритм Прима
 void find_min_edge(int** C, int n, int* visited, int& v, int& w);
 void Prim(double** C, int n, Edge* E);
-void Prim_wrap(int** C, int n);
+void print_min_ost_tree(Edge* E, int n);
 
 // * Алгоритм Краскала
 void Kruskal(int n, Edge* edges, Edge* T, int m);
+
+// * Алгоритм Дейкстры
+int Dijkstra(int** C, int n, int x);
+
+// * Алгоритм Беллмана-Форда
+bool BellmanFord(int** C, int n, int* dist, int x);
 
 // ----------------------АЛГОРИТМЫ ОБХОДА ГРАФА--------------------------------------
 
@@ -156,13 +162,11 @@ Edge* Prim(int** C, int n) {
     return E;
 }
 
-void Prim_wrap(int** C, int n) {
-    auto res = Prim(C, n);
+// Вывод в консоль минимального остовного дерева
+void print_min_ost_tree(Edge* E, int n) {
     std::cout << "Минимальное остовное дерево для данного графа:\n";
-    for (int i = 0; i < n - 1; ++i) std::cout << res[i] << " ";
+    for (int i = 0; i < n - 1; ++i) std::cout << E[i] << " ";
     std::cout << std::endl << std::endl;
-    for(int i = 0; i < n; ++i) delete[] C[i];
-    delete[] C;
 }
 
 // Инициализация матрицы NxN
@@ -178,7 +182,32 @@ int** create_matrix(int n) {
 
 // -----------------------АЛГОРИТМ КРАСКАЛА---------------------------------------------
 
-// Алгоритм Краскала
-void Kruskal(int n, Edge* edges, Edge* E, int m) {
-    return;
+Edge* Kruskal(int n, Edge* edges, int m) {
+    Edge* E = new Edge[n - 1]{};
+    int* components = new int[n];
+    for (int i = 0; i < n; ++i) 
+        components[i] = i;
+
+    int current = 0, count = n, j = 0;
+    while (current < m && count > 1) {
+        Edge edge = edges[current];
+        if (components[edge.v1] != components[edge.v2]) {
+            int k = components[edge.v2];
+            for (int i = 0; i < n; ++i) {
+                if (components[i] == k)
+                    components[i] = components[edge.v1];
+            }
+            --count;
+            E[j++] = edge;
+        }
+        ++current;
+    }
+    delete[] components;
+    return E;
+}
+
+// ------------------------------АЛГОРИТМ ДЕЙКСТРЫ--------------------------------------
+
+int Dijkstra(int** C, int n, int x) {
+    return 0;
 }

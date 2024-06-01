@@ -28,19 +28,27 @@ TEST(GraphTest, DFSTest2) {
 }
 
 TEST(GraphTest, PrimTest) {
-    auto C = create_matrix(6);
-    C[0][1] = 8; C[0][5] = 5;
-    C[1][2] = 1;
-    C[2][3] = 10;
-    C[3][4] = 1;
-    C[4][1] = 15;
-    C[5][4] = 3;
+    int n = 6;
+    auto C = create_matrix(n);
+    C[0][1] = 8; C[1][0] = 8;
+    C[0][5] = 5; C[5][0] = 5;
+    C[1][2] = 1; C[2][1] = 1;
+    C[2][3] = 10; C[3][2] = 10;
+    C[3][4] = 1; C[4][3] = 1;
+    C[4][1] = 15; C[1][4] = 15;
+    C[5][4] = 3; C[4][5] = 3;
 
-    Prim_wrap(C, 6);
+    auto res = Prim(C, n);
+    print_min_ost_tree(res, n);
+
+    for(int i = 0; i < n; ++i) 
+        delete[] C[i];
+    delete[] C;
 }
 
 TEST(GraphTest, PrimTest2) {
-    auto C = create_matrix(7);
+    int n = 7;
+    auto C = create_matrix(n);
     C[0][1] = 20; C[1][0] = 20;
     C[0][4] = 2; C[4][0] = 2;
     C[0][6] = 5; C[6][0] = 5;
@@ -52,7 +60,44 @@ TEST(GraphTest, PrimTest2) {
     C[3][5] = 4; C[5][3] = 4;
     C[3][6] = 1; C[6][3] = 1;
 
-    Prim_wrap(C, 7);
+    auto res = Prim(C, n);
+    print_min_ost_tree(res, n);
+
+    for(int i = 0; i < n; ++i) 
+        delete[] C[i];
+    delete[] C;
+}
+
+TEST(GraphTest, KruskalTest) {
+    int m = 7, n = 6;
+    Edge edges[m];
+    edges[0] = Edge(1,2);
+    edges[1] = Edge(3,4);
+    edges[2] = Edge(5,4);
+    edges[3] = Edge(0,5);
+    edges[4] = Edge(0,1);
+    edges[5] = Edge(2,3);
+    edges[6] = Edge(4,1);
+
+    auto res = Kruskal(n, edges, m);
+    print_min_ost_tree(res, n);
+}
+
+TEST(GraphTest, KruskalTest2) {
+    int m = 9, n = 7;
+    Edge edges[m];
+    edges[0] = Edge(2, 5);
+    edges[1] = Edge(3, 6);
+    edges[2] = Edge(1, 3);
+    edges[3] = Edge(0, 4);
+    edges[4] = Edge(1, 2);
+    edges[5] = Edge(3, 5);
+    edges[6] = Edge(0, 6);
+    edges[7] = Edge(2, 4);
+    edges[8] = Edge(0, 1);
+
+    auto res = Kruskal(n, edges, m);
+    print_min_ost_tree(res, n);
 }
 
 
