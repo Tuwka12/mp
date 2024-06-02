@@ -100,6 +100,35 @@ TEST(GraphTest, KruskalTest2) {
     print_min_ost_tree(res, n);
 }
 
+TEST(GraphTest, DijkstraTest) {
+    int n = 6;
+    auto C = create_matrix(n);
+    C[0][1] = 20;
+    C[0][4] = 10;
+    C[3][2] = 20;
+    C[5][2] = 1; 
+    C[0][3] = 40;
+    C[1][5] = 10;
+    C[4][3] = 15; 
+
+    print_weights(C, n);
+    Dijkstra_wrap(C, n);
+}
+
+// TEST(GraphTest, DijkstraTest2) {
+//     int n = 6;
+//     auto C = create_matrix(n);
+//     C[0][1] = 8; 
+//     C[0][5] = 5; 
+//     C[1][2] = 1; 
+//     C[2][3] = 10;
+//     C[3][4] = 1; 
+//     C[4][1] = 15;
+//     C[5][4] = 3; 
+
+//     print_weights(C, n);
+//     Dijkstra_wrap(C, n);
+// }
 
 int main(int argc, char *argv[])
 {

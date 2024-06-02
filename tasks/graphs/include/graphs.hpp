@@ -18,6 +18,8 @@ struct Edge {
 // Указатель на функию обхода графа
 using round_func = int (*)(std::list<int>*, std::list<Edge>*, int);
 
+const int MAXDIST = 1000000;
+
 // -----------------------------------------------------------------------------
 
 // * Алгоритмы обхода графов
@@ -39,7 +41,7 @@ void print_min_ost_tree(Edge* E, int n);
 void Kruskal(int n, Edge* edges, Edge* T, int m);
 
 // * Алгоритм Дейкстры
-int Dijkstra(int** C, int n, int x);
+int* Dijkstra(int** C, int n, int x);
 
 // * Алгоритм Беллмана-Форда
 bool BellmanFord(int** C, int n, int* dist, int x);
@@ -132,7 +134,7 @@ void make_round(round_func F, std::list<int>* L, int n) {
 // Поиск невключенного ребра минимального веса
 void find_min_edge(int** C, int n, int* visited, int& v, int& w) {
     v = w = 0;
-    int tmp = INT32_MAX;
+    int tmp = MAXDIST;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             if (i != j && visited[i] && !visited[j] && C[i][j] < tmp) {
@@ -175,7 +177,7 @@ int** create_matrix(int n) {
     for (int i = 0; i < n; ++i) {
         m[i] = new int [n];
         for (int j = 0; j < n; ++j)
-            m[i][j] = i == j ? 0 : INT32_MAX;
+            m[i][j] = (i == j) ? 0 : MAXDIST;
     }
     return m;
 }
@@ -208,6 +210,58 @@ Edge* Kruskal(int n, Edge* edges, int m) {
 
 // ------------------------------АЛГОРИТМ ДЕЙКСТРЫ--------------------------------------
 
-int Dijkstra(int** C, int n, int x) {
-    return 0;
+// Алгоритм Дейкстры
+int* Dijkstra(int** C, int n, int x) {
+    int* distance = new int[n];
+    int* S = new int[n]{};
+    S[x] = 1;
+    int count = 1;
+    for (int i = 0; i < n; ++i)
+        distance[i] = C[x][i];
+    while (count < n) {
+        int j = 1;
+        while (S[j]) ++j;
+        int k = j;
+        for (int i = j + 1; i < n; ++i)
+            if (!S[i] && distance[k] > distance[i])
+                k = i;
+        S[k] = 1;
+        ++count;
+        for (j = 1; j < n; ++j)
+            if (!S[j] && distance[j] > distance[k] + C[k][j])
+                distance[j] = distance[k] + C[k][j];
+    }
+    delete[] S;
+    return distance;
 }
+
+//  Вывод в консоль матрицы весов рёбер данного графа
+void print_weights(int** C, int n) {
+    std::cout << "Матрица весов рёбер:\n";
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (C[i][j] == MAXDIST) std::cout << std::setw(4) << "-";
+            else std::cout << std::setw(4) << C[i][j];
+        } std::cout << std::endl;
+    } std::cout << std::endl;
+}
+
+// Обход всего графа с использованием алгоритма Дейкстры
+void Dijkstra_wrap(int** C, int n) {
+    for (int i = 0; i < n; ++i) {
+        int* dist = Dijkstra(C, n, i);
+        std::cout << i << ')';
+        for (int j = 0; j < n; ++j) {
+            if (dist[j] == MAXDIST)
+                std::cout << std::setw(4) << "-";
+            else std::cout << std::setw(4) << dist[j];
+        }
+        std::cout << std::endl;
+        delete[] dist;
+    }
+    for (int i = 0; i < n; ++i) delete[] C[i];
+    delete[] C;
+}
+
+// ------------------------------АЛГОРИТМ БЕЛЛМАНА-ФОРДА----------------------------
+
