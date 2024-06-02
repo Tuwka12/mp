@@ -265,3 +265,43 @@ void Dijkstra_wrap(int** C, int n) {
 
 // ------------------------------АЛГОРИТМ БЕЛЛМАНА-ФОРДА----------------------------
 
+bool BellmanFord(int** C, int n, int* distance, int x) {
+    bool flag = true;
+    for (int i = 0; i < n; ++i)
+        distance[i] = C[x][i];
+    for (int k = 0; k < n - 1; ++k) {
+        for (int j = 0; j < n; ++j) {
+            for (int i = 0; i < n; ++i) {
+                if (C[i][j] != 0 && distance[j] > distance[i] + C[i][j])
+                    distance[j] = distance[i] + C[i][j];
+            }
+        }
+    }
+    for (int j = 0; j < n; ++j) {
+        for (int i = 0; i < n; ++i) {
+            if (C[i][j] != 0 && distance[j] > distance[i] + C[i][j]) {
+                flag = false;
+                break;
+            }
+        }
+    }
+    return flag;
+}
+
+// Обход всего графа с использованием алгоритма Беллмана-Форда
+void BellmanFord_wrap(int** C, int n) {
+    int* distance = new int[n];
+    for (int i = 0; i < n; ++i) {
+        if (BellmanFord(C, n, distance, i)) {
+            std::cout << i << ')';
+            for (int j = 0; j < n; ++j) {
+                if (distance[j] == MAXDIST) 
+                    std::cout << std::setw(4) << "-";
+                else std::cout << std::setw(4) << distance[j];
+            } std::cout << std::endl;
+        }
+        else std::cout << "Кратчайшие расстояния определить невозможно" << std::endl;
+    }
+    for (int i = 0; i < n; ++i) delete[] C[i];
+    delete[] C; delete[] distance;
+}
